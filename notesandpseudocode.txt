@@ -1,0 +1,17 @@
+if TX && Nameplate
+	single phase
+	rename IMG00NAMEPLATE to POLE NUM [x] + P
+	rename IMG00TX to POLE NUM [x] + T
+if TX  NOT Nameplate
+	set Three phase flag to R
+	rename IMG00TX to POLENUM [x] + T
+if NOT TX && NAMEPLATE
+	if R flag
+		Rename IMG00NAMEPLATE to POLE_NUM [x] + R
+		set Three phase flag to C
+	if  C flag
+		Rename IMG00NAMEPLATE to POLE_NUM [x] + C
+		set Three phase flag to F
+	if  F flag
+		Rename IMG00NAMEPLATE to POLE_NUM [x] + F
+		set Three phase flag to None
