@@ -1,14 +1,15 @@
 from openpyxl import Workbook
 from openpyxl import load_workbook
 import os, shutil
-def renstuff( spreadsheet, directory ):
-    offset = 2
-
-    namecol='A'
-    txcol='D'
-    platecol='E'
+def renstuff( spreadsheet, directory, namecol, platecol, txcol, prefix, offset ):
+   # offset = 2
+   # prefix='IMG0000'
+   # namecol='A'
+   # txcol='D'
+   # platecol='E'
+   
     Tri=None
-    prefix='IMG0000'
+   
 
     wb = load_workbook(spreadsheet)
     ws=wb.active
