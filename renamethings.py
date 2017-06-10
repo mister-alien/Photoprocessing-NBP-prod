@@ -16,8 +16,8 @@ def renstuff( spreadsheet, directory, namecol, platecol, txcol, prefix, offset )
     #a=ws[platecol +str(offset+ind)]
     n= ws.max_row
 
-    if not os.path.exists('processed'):
-        os.makedirs('processed')
+    if not os.path.exists(directory+'\\processed\\'):
+        os.makedirs(directory+'\\processed\\')
     for x in range(1,n-offset):
         name=ws[namecol +str(offset+x)]
         platenum=ws[platecol +str(offset+x)]

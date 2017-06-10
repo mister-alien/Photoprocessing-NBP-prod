@@ -30,10 +30,10 @@ def menuPress(menus):
         app.stop()
         #### Default value block
 offset = 2
-prefix='IMG0000'
+prefix='IMG_0000'
 namecol='A'
-txcol='D'
-platecol='E'
+txcol='L'
+platecol='M'
 
 app=gui()
 
