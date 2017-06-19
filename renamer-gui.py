@@ -23,7 +23,7 @@ def press(btn):
         filename = askopenfilename() # show an "Open" dialog box and return the path to the selected file
         app.setEntry("linefile",filename)
     elif(btn=="Rename"):
-        print(str(offset)+'\n'+prefix+'\n'+namecol+'\n'+txcol+'\n'+platecol)
+#        print(str(offset)+'\n'+prefix+'\n'+namecol+'\n'+txcol+'\n'+platecol)
         renstuff(app.getEntry("linefile"),app.getEntry("workdir"),namecol,platecol,txcol,prefix,offset)
         print("Done")    
     elif(btn=="work dir"):
@@ -113,7 +113,7 @@ else:
     cfg.write(str(offset)+'\n'+prefix+'\n'+namecol+'\n'+txcol+'\n'+platecol)
     cfg.close()
 
-print(str(offset)+'\n'+prefix+'\n'+namecol+'\n'+txcol+'\n'+platecol)
+# print(str(offset)+'\n'+prefix+'\n'+namecol+'\n'+txcol+'\n'+platecol)
 app=gui(title="Photo-Renamer")
 
 ### fillings
@@ -174,4 +174,5 @@ app.setIcon("icon.ico")
 app.stopSubWindow()
 app.hideSubWindow("info")
 app.setIcon("icon.ico")
+app.addEmptyLabel("progress")
 app.go()
