@@ -39,7 +39,7 @@ def renstuff( spreadsheet, directory, namecol, platecol, txcol, prefix, offset )
         platenum=ws[platecol +str(offset+x)]    # current cell containing plate pic number
         txnum=ws[txcol +str(offset+x)]          # current cell containing tx pic number
         
-        print(name.value)                       # Which item is currently being processed (2 photo per item)
+        # print(name.value)                       # Which item is currently being processed (2 photo per item)
 
         ### All of the ugly directory work is here, 
         photop=directory+'\\'+prefix[0:(len(prefix)-len(str(platenum.value)))]+str(platenum.value)+'.jpg'   # Plate filename+path(RAW)

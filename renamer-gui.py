@@ -1,11 +1,15 @@
+from __future__ import print_function   # (for when i use py 2 )
 import renamethings
 import os.path
 from renamethings import renstuff
 from appJar import gui
-from tkinter import Tk
-from tkinter.filedialog import askopenfilename
-from tkinter.filedialog import askdirectory
-#from __future__ import print_function    (for when i use py 2 )
+from Tkinter import *
+
+import tkFileDialog
+#from tkinter import Tk
+#from tkinter.filedialog import askopenfilename
+#from tkinter.filedialog import askdirectory
+
 
 
 ###################################################
@@ -20,7 +24,7 @@ def press(btn):
         app.stop()
     elif(btn=="Browse"):
         Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
-        filename = askopenfilename() # show an "Open" dialog box and return the path to the selected file
+        filename = tkFileDialog.askopenfilename() # show an "Open" dialog box and return the path to the selected file
         app.setEntry("linefile",filename)
     elif(btn=="Rename"):
 #        print(str(offset)+'\n'+prefix+'\n'+namecol+'\n'+txcol+'\n'+platecol)
@@ -28,7 +32,7 @@ def press(btn):
         print("Done")    
     elif(btn=="work dir"):
         Tk().withdraw()
-        direct=askdirectory()
+        direct=tkFileDialog.askdirectory()
         app.setEntry("workdir",direct)
         
     elif(btn=="Defaults"):
