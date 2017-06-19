@@ -10,7 +10,8 @@ import tkFileDialog
 #from tkinter.filedialog import askopenfilename
 #from tkinter.filedialog import askdirectory
 
-
+#FILEOPENOPTIONS = dict(defaultextension='.bin', \
+ #                      filetypes=[('All files','*.*'), ('Excel Spreadsheet','*.xlsx, *.xlsxm')])
 
 ###################################################
 # Action definitions for the button pressing and the menu buttons
@@ -24,7 +25,8 @@ def press(btn):
         app.stop()
     elif(btn=="Browse"):
         Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
-        filename = tkFileDialog.askopenfilename() # show an "Open" dialog box and return the path to the selected file
+        filename = tkFileDialog.askopenfilename(filetypes=(("Excel Spreadsheet", "*.xlsx"), \
+                                    ("Excel Macro Spreadsheet", "*.xlsm"),("All Files","*.*") )) # show an "Open" dialog box and return the path to the selected file
         app.setEntry("linefile",filename)
     elif(btn=="Rename"):
 #        print(str(offset)+'\n'+prefix+'\n'+namecol+'\n'+txcol+'\n'+platecol)
@@ -165,7 +167,7 @@ app.addButton("Defaults",press,6,0,1)
 app.addButton("OK",press,7,0,1)
 app.addButton("Apply",press,7,1,1)
 app.addNamedButton("Cancel","cancelconf",press,7,2,1)
-app.setIcon("config.ico")
+#app.setIcon("config.ico")
 app.stopSubWindow()
 app.hideSubWindow("config")
 
@@ -174,9 +176,9 @@ app.addMessage("infostuff","(c) Christopher Logan, 2017\n \
              This program is intended only for use in renaming  \
              raw data in the transformer data collection project.\n\n \
              Report any bugs or requests to clogan@nbpower.com.")
-app.setIcon("icon.ico")
+#app.setIcon("icon.ico")
 app.stopSubWindow()
 app.hideSubWindow("info")
-app.setIcon("icon.ico")
+#app.setIcon("icon.ico")
 app.addEmptyLabel("progress")
 app.go()
