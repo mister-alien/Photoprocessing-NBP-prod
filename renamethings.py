@@ -25,6 +25,9 @@ def renstuff( spreadsheet, directory, namecol, platecol, txcol, prefix, offset )
                                                 # have to fix this
     n= ws.max_row                               # max_row to find out how much we will have to iterate... if there are empty rows at the end that is ok
 
+    errs =["" for  x in range(2*n)]
+    eind=0
+    
     dest =directory+'\\..\\processed\\'         # the destination directory in full for future use, used ~8 times 
     
     if not os.path.exists(dest):                # If the destination directory doesn't exist, make it
@@ -52,14 +55,23 @@ def renstuff( spreadsheet, directory, namecol, platecol, txcol, prefix, offset )
 
         # Herein lies the actual copying
         if (platenum.value) and (txnum.value):  # If it's a SINGLE PHASE transformer
-            shutil.copy(photop,platename)       # Copy both tx and plate pic over to the destination
-            shutil.copy(photot,txname)
-
+            try:
+                shutil.copy(photop,platename)   # Copy both tx and plate pic over to the destination
+            except IOError, e:
+                errs[eind] = photop+" Error: "+str(e)+"\n"
+                eind =eind+1
+            try:
+                shutil.copy(photot,txname)
+            except IOError, e:
+                errs[eind] = photot+" Error: "+str(e)+"\n"
+                eind =eind+1
         elif (txnum.value) and (platenum.value == None):
 #            Tri='R'                             # Detecting TRI-PHASE! copies the transformer pic, and sets the threephase flag for the next row 
-            shutil.copy(photot,txname)          # Script assumes R-C-F order, if this is not the case we DONT check for it, but it should
-                                                # still name correctly in that case.
-
+            try:
+                shutil.copy(photot,txname)      # Script assumes R-C-F order, if this is not the case we DONT check for it, but it should
+            except IOError, e:                  # still name correctly in that case.
+                errs[eind] = photot+" Error: "+str(e)+"\n"
+                eind =eind+1
         elif (txnum.value == None) and platenum.value:
                                                 # Still TRI PHASE, plate pic detection.
                                                 # Basically depending on the tri flag, we rename  the photos,
@@ -74,5 +86,10 @@ def renstuff( spreadsheet, directory, namecol, platecol, txcol, prefix, offset )
 #            elif Tri=='F':
 #                shutil.copy(photop,triname)
 #                Tri = None
-            shutil.copy(photop,triname)
-    return
+            try:
+                shutil.copy(photop,triname)
+            except IOError, e:
+                errs[eind] = photop+" Error: "+str(e)+"\n"
+                eind =eind+1
+                
+    return errs

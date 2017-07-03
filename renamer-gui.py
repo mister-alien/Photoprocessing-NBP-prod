@@ -36,7 +36,24 @@ def press(btn):
         
     elif(btn=="Rename"):
         app.setLabel("status","Renaming... be patient")
-        renstuff(app.getEntry("linefile"),app.getEntry("workdir"),namecol,platecol,txcol,prefix,offset)
+        if(os.path.isfile(app.getEntry("linefile"))and os.path.isdir(app.getEntry("workdir"))):
+            errs=renstuff(app.getEntry("linefile"),app.getEntry("workdir"),namecol,platecol,txcol,prefix,int(offset))
+            
+            app.setLabel("status","Idle")
+            if not all(l is '' for l in errs):
+                errs='\n'.join(errs)
+                app.setMessage("dupelist",errs)
+                app.showSubWindow("dupew")
+            else:
+                app.setMessage("dupelist","No Renaming errors.\n")
+                app.showSubWindow("dupew")
+        elif(os.path.isfile(app.getEntry("linefile"))and not os.path.isdir(app.getEntry("workdir"))):
+           app.warningBox("error", "Photo path does not exist")
+        elif(not os.path.isfile(app.getEntry("linefile"))and os.path.isdir(app.getEntry("workdir"))):
+           app.warningBox("error", "Spreadsheet does not exist")
+        elif(not os.path.isfile(app.getEntry("linefile"))and not os.path.isdir(app.getEntry("workdir"))):
+           app.warningBox("error", "Spreadsheet and photo path do not exist")
+
         app.setLabel("status","Idle.")
         
     elif(btn=="work dir"):
@@ -48,16 +65,20 @@ def press(btn):
         if not app.getEntry("linefile"):
             app.setLabel("status","Pick a spreadsheet first!")
         else:
-            app.setLabel("status","checking for duplicate numbers.")
-            v=check_duplicates(app.getEntry("linefile"), txcol, platecol, namecol, int(offset))
-            app.setLabel("status","Idle")
-            if not all(l is '' for l in v):
-                v='\n'.join(v)
-                app.setMessage("dupelist",v)
-                app.showSubWindow("dupew")
+            app.setLabel("status","Checking for duplicate numbers.")
+            if(not os.path.isfile(app.getEntry("linefile"))):
+                app.warningBox("error", "Spreadsheet does not exist")
+                app.setLabel("status","Error, check spreadsheet path")
             else:
-                app.setMessage("dupelist","No Duplicates Found!\n")
-                app.showSubWindow("dupew")
+                v=check_duplicates(app.getEntry("linefile"), txcol, platecol, namecol, int(offset))
+                app.setLabel("status","Idle")
+                if not all(l is '' for l in v):
+                    v='\n'.join(v)
+                    app.setMessage("dupelist",v)
+                    app.showSubWindow("dupew")
+                else:
+                    app.setMessage("dupelist","No Duplicates Found!\n")
+                    app.showSubWindow("dupew")
                 
     elif(btn=="Defaults"):
         cfg=open('config.txt','w+') #If the config doesn't exist, write the default values to it
@@ -233,13 +254,16 @@ app.stopSubWindow()
 app.hideSubWindow("info")                                   # End of info window
 
 ### Duplicate results window, shows only results of duplicate checking...
-app.startSubWindow("dupew",title="Duplicate Results")
+app.startSubWindow("dupew",title="Status Window")
 
+
+#app.setIcon("icon.ico")
+app.setGeometry(400, 400)
 app.startScrollPane("dupe")                                 # The entire subwindow's widgets are contained within the scrollpane. because it'll have to scroll down hopefully
 app.addEmptyMessage("dupelist")                             # Empty message that will hopefully cause it to scroll a lot if necessary
 app.stopScrollPane()
 
-#app.setIcon("icon.ico")
+app.setResizable(canResize=False)
 
 app.stopSubWindow()                                     
 app.hideSubWindow("dupew")                                  
