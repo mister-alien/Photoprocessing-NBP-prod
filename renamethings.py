@@ -87,8 +87,8 @@ def renstuff( spreadsheet, directory, namecol, platecol, txcol, prefix, offset )
 #                shutil.copy(photop,triname)
 #                Tri = None
             try:
-                shutil.copy(photop,triname)
-            except IOError, e:
+                shutil.copy(photop,triname)     # Error Catching! Try coping, if we get an error, it will add it to the error buffer and continue on!
+            except IOError, e:                  # Finally the program is error tolerant.
                 errs[eind] = photop+" Error: "+str(e)+"\n"
                 eind =eind+1
                 

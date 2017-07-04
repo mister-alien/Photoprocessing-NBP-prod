@@ -19,27 +19,31 @@ import tkFileDialog
 ###################################################
 # Action definitions for the button pressing and the menu buttons
 def press(btn):
+                        # these are global configuration variables, probably a better way to do this
     global offset
     global prefix
     global namecol
     global txcol
     global platecol
-    
+                        # Cancel button just stops the program
     if(btn=="Cancel"):
         app.stop()
-        
+                        # browse opens up a tk prompt.. 
     elif(btn=="Browse"):
         Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
         filename = tkFileDialog.askopenfilename(filetypes=(("Excel Spreadsheet", "*.xlsx"), \
                                     ("Excel Macro Spreadsheet", "*.xlsm"),("All Files","*.*") )) # show an "Open" dialog box and return the path to the selected file
         app.setEntry("linefile",filename)
-        
+                        # Rename button
     elif(btn=="Rename"):
         app.setLabel("status","Renaming... be patient")
+
+                        # made sure the worksheet exists and that the path exists for the raw photos 
         if(os.path.isfile(app.getEntry("linefile"))and os.path.isdir(app.getEntry("workdir"))):
             errs=renstuff(app.getEntry("linefile"),app.getEntry("workdir"),namecol,platecol,txcol,prefix,int(offset))
-            
+                        # Rename everything (hopefully)  , also make this asynch if possible sometime            
             app.setLabel("status","Idle")
+                        # Display any and all errors
             if not all(l is '' for l in errs):
                 errs='\n'.join(errs)
                 app.setMessage("dupelist",errs)
@@ -47,6 +51,8 @@ def press(btn):
             else:
                 app.setMessage("dupelist","No Renaming errors.\n")
                 app.showSubWindow("dupew")
+
+                        # All conditions which  would cause the script to not start
         elif(os.path.isfile(app.getEntry("linefile"))and not os.path.isdir(app.getEntry("workdir"))):
            app.warningBox("error", "Photo path does not exist")
         elif(not os.path.isfile(app.getEntry("linefile"))and os.path.isdir(app.getEntry("workdir"))):
@@ -57,21 +63,27 @@ def press(btn):
         app.setLabel("status","Idle.")
         
     elif(btn=="work dir"):
+                        # Get the directory, woo
         Tk().withdraw()
         direct=tkFileDialog.askdirectory()
         app.setEntry("workdir",direct)
         
     elif(btn=="Check Duplicates"):
+                        # make sure you've selected a spreadsheet
         if not app.getEntry("linefile"):
             app.setLabel("status","Pick a spreadsheet first!")
         else:
+                        # start checking and then display any duplicates
             app.setLabel("status","Checking for duplicate numbers.")
+                        # check if the spreadsheet actually exists
             if(not os.path.isfile(app.getEntry("linefile"))):
                 app.warningBox("error", "Spreadsheet does not exist")
                 app.setLabel("status","Error, check spreadsheet path")
             else:
+                        # Now ACTUALLY check duplicates
                 v=check_duplicates(app.getEntry("linefile"), txcol, platecol, namecol, int(offset))
                 app.setLabel("status","Idle")
+                        # And display results in the status window
                 if not all(l is '' for l in v):
                     v='\n'.join(v)
                     app.setMessage("dupelist",v)
@@ -81,6 +93,7 @@ def press(btn):
                     app.showSubWindow("dupew")
                 
     elif(btn=="Defaults"):
+                        # Button to reset to defaults in config window
         cfg=open('config.txt','w+') #If the config doesn't exist, write the default values to it
         offset = 2
         prefix='IMG_0000'
@@ -88,30 +101,38 @@ def press(btn):
         txcol='L'
         platecol='M'
         cfg.write(str(offset)+'\n'+prefix+'\n'+namecol+'\n'+txcol+'\n'+platecol)
+        
         cfg.close()
         app.setEntry("pfix", prefix)
         app.setEntry("ofset", offset)
         app.setEntry("namcol", namecol)
         app.setEntry("txco", txcol)
         app.setEntry("plateco", platecol)
-        
+
+                        # Button applies changes, then closes the config window
     elif(btn=="OK"):
+
+                        # rstrip strips extra whitespace from these entries
         prefix = app.getEntry("pfix").rstrip()
         offset = int(app.getEntry("ofset"))
         namecol = app.getEntry("namcol").rstrip()
         txcol = app.getEntry("txco").rstrip()
         platecol = app.getEntry("plateco").rstrip()
+
+                        # Open the config file + write in new config
         cfg=open('config.txt','w+')
         cfg.write(str(offset)+'\n'+prefix+'\n'+namecol+'\n'+txcol+'\n'+platecol)
         cfg.close()
         app.hideSubWindow("config")
         
+                        # Button only applies changes to config
     elif(btn=="Apply"):
-        prefix = app.getEntry("pfix")
-        offset = app.getEntry("ofset")
-        namecol = app.getEntry("namcol")
-        txcol = app.getEntry("txco")
-        platecol = app.getEntry("plateco")
+        prefix = app.getEntry("pfix").rstrip()
+        offset = app.getEntry("ofset").rstrip()
+        namecol = app.getEntry("namcol").rstrip()
+        txcol = app.getEntry("txco").rstrip()
+        platecol = app.getEntry("plateco").rstrip()
+        
         cfg=open('config.txt','w+')
         cfg.write(str(offset)+'\n'+prefix+'\n'+namecol+'\n'+txcol+'\n'+platecol)
         cfg.close()
@@ -120,7 +141,7 @@ def press(btn):
         app.hideSubWindow("config")
         
 def menuPress(menus):
-    
+                        # Menus buttons probably don't need to be separate from the other buttons
     if(menus=="Config"):
         app.showSubWindow("config")
         
