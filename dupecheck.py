@@ -17,7 +17,7 @@ def check_duplicates(spreadsheet, txcol, platecol, namecol,offset):
     dupeind=0                                           # How many duplicates?
     ind= 0                                              # how many unique numbers?
 
-    for z in range(1,n-offset):                         # check all rows... woo
+    for z in range(1,n-offset+1):                         # check all rows... woo
         curplate=ws[platecol+str(z+offset)].value       # Get the numbers for tx and plate and the tx name
         curtx=ws[txcol+str(z+offset)].value
         curpole=ws[namecol+str(z+offset)].value

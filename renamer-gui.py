@@ -96,7 +96,7 @@ def press(btn):
                         # Button to reset to defaults in config window
         cfg=open('config.txt','w+') #If the config doesn't exist, write the default values to it
         offset = 2
-        prefix='IMG_0000'
+        prefix='IMG_'
         namecol='A'
         txcol='L'
         platecol='M'
@@ -179,7 +179,7 @@ if os.path.isfile('config.txt'):
 else:
     cfg=open('config.txt','w+')             #If the config doesn't exist, write the default values to it
     offset = 2
-    prefix='IMG_0000'
+    prefix='IMG_'
     namecol='A'
     txcol='L'
     platecol='M'
